@@ -1,0 +1,7 @@
+---
+title: "About"
+---
+
+I was born in a small country in southern Brazil called Astorga. From an early age, I developed an interest in STEM, which led me to choose engineering as my undergrad major. After experimenting with different areas, I felt that biomedical engineering allowed me to apply my computer science skills to helping society. First, I developed a platform to monitor health equipment behavior. Then, I switched to developing software to analyze scRNA-seq and ST data. 
+
+During my Ph.D., I aim to continue working with spatial omics data but focusing more on its biological significance. I also want to connect with other Brazilian students in the US and advertise the opportunities available here. Finally, another goal of mine is to make science available to a broader audience by making my code reproducible and by expressing my research in common terms.

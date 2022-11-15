@@ -1,0 +1,23 @@
+project:
+  type: website
+  output-dir: docs
+
+website:
+  title: "Rafael dos Santos Peixoto"
+  navbar:
+    left:
+      - href: index.qmd
+        text: Home
+      - about.qmd
+      - data_analysis.qmd
+
+format:
+  html:
+    theme: cosmo
+    css: styles.css
+    toc: true
+
+editor: visual
+
+execute:
+  warning: false
