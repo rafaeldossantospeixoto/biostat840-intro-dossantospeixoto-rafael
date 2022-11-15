@@ -83,6 +83,25 @@ code span.st { color: #4070a0; } /* String */
 code span.va { color: #19177c; } /* Variable */
 code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
 </style>
 
 
@@ -168,7 +187,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
         
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
+<main class="content page-columns page-full" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
@@ -188,8 +207,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </header>
 
 <p>One of the things I am passionate about is soccer, both playing and watching. My favorite team is Palmeiras (and it should be your favorite team too)! In the past three years, we won two South American Cups (2020 and 2021), one Brazilian Cup (2020), and one Brazilian League (2022). If this information is not enough to make you believe this is the best team in the world, I will use the information of the past Brazilian League to show how Palmeiras stands out against the other teams.</p>
-<p>This analysis was made to anyone who knows what soccer is! The data used was collected by Adão Duque and it is available on his <a href="https://github.com/adaoduque/Brasileirao_Dataset">github repo</a> and also on <a href="https://www.kaggle.com/datasets/adaoduque/campeonato-brasileiro-de-futebol?resource=download">kaggle</a>. It shows the information of the 7645 Brazilian League matches between the years of 2003 and 2021. In addition, it also presents some statistics for these games. A file called <em>Legenda.txt</em> includes the dictionary for the data.</p>
-<p>First, we load the data for the matches, select and rename (to English) the columns used in this data and select the last 5 years.</p>
+<p>This analysis was made to anyone who knows what soccer is! The data used was collected by Adão Duque and it is available on his <a href="https://github.com/adaoduque/Brasileirao_Dataset">github repo</a> and also on <a href="https://www.kaggle.com/datasets/adaoduque/campeonato-brasileiro-de-futebol?resource=download">kaggle</a>. It shows the information of the 7645 Brazilian League matches between the years of 2003 and 2021. In addition, it also presents some statistics for these games. A file called <a href="https://raw.githubusercontent.com/rafaeldossantospeixoto/biostat840-intro-dossantospeixoto-rafael/master/data/br/Legenda.txt"><em>Legenda.txt</em></a> includes the dictionary for the data <span class="citation" data-cites="duque2018">(<a href="#ref-duque2018" role="doc-biblioref">Duque 2018</a>)</span>.</p>
+<p>First, we load the data for the matches, select and rename (to English) the columns used in this data and select the last 6 years.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -204,113 +223,398 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>           <span class="at">away_score =</span> visitante_placar) <span class="sc">%&gt;%</span> </span>
 <span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(date <span class="sc">&gt;</span> <span class="st">"2016-01-01"</span>)</span>
 <span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>matches</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 2,279 × 6
-   date       home          away         winner      home_score away_score
-   &lt;date&gt;     &lt;chr&gt;         &lt;chr&gt;        &lt;chr&gt;            &lt;dbl&gt;      &lt;dbl&gt;
- 1 2016-05-14 Palmeiras     Athletico-PR Palmeiras            4          0
- 2 2016-05-14 Flamengo      Sport        Flamengo             1          0
- 3 2016-05-14 Atletico-MG   Santos       Atletico-MG          1          0
- 4 2016-05-14 Coritiba      Cruzeiro     Coritiba             1          0
- 5 2016-05-15 Santa Cruz    Vitoria      Santa Cruz           4          1
- 6 2016-05-15 Botafogo-RJ   Sao Paulo    Sao Paulo            0          1
- 7 2016-05-15 Figueirense   Ponte Preta  -                    0          0
- 8 2016-05-15 Corinthians   Gremio       -                    0          0
- 9 2016-05-15 America-MG    Fluminense   Fluminense           0          1
-10 2016-05-15 Internacional Chapecoense  -                    0          0
-# … with 2,269 more rows</code></pre>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="fu">head</span>(matches))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="table table-sm table-striped">
+<colgroup>
+<col style="width: 15%">
+<col style="width: 17%">
+<col style="width: 18%">
+<col style="width: 17%">
+<col style="width: 15%">
+<col style="width: 15%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">date</th>
+<th style="text-align: left;">home</th>
+<th style="text-align: left;">away</th>
+<th style="text-align: left;">winner</th>
+<th style="text-align: right;">home_score</th>
+<th style="text-align: right;">away_score</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">2016-05-14</td>
+<td style="text-align: left;">Palmeiras</td>
+<td style="text-align: left;">Athletico-PR</td>
+<td style="text-align: left;">Palmeiras</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">2016-05-14</td>
+<td style="text-align: left;">Flamengo</td>
+<td style="text-align: left;">Sport</td>
+<td style="text-align: left;">Flamengo</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">2016-05-14</td>
+<td style="text-align: left;">Atletico-MG</td>
+<td style="text-align: left;">Santos</td>
+<td style="text-align: left;">Atletico-MG</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">2016-05-14</td>
+<td style="text-align: left;">Coritiba</td>
+<td style="text-align: left;">Cruzeiro</td>
+<td style="text-align: left;">Coritiba</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">2016-05-15</td>
+<td style="text-align: left;">Santa Cruz</td>
+<td style="text-align: left;">Vitoria</td>
+<td style="text-align: left;">Santa Cruz</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">2016-05-15</td>
+<td style="text-align: left;">Botafogo-RJ</td>
+<td style="text-align: left;">Sao Paulo</td>
+<td style="text-align: left;">Sao Paulo</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <p>Now, we will create a column for the team and the condition it player. Then we will create columns for the number of points awarded in each game. If a team wins it gets 3 points, if it draws it gets 1 point, if it looses 0 points. We will also create a column for the season (year).</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>matches_transformed <span class="ot">&lt;-</span> matches <span class="sc">%&gt;%</span> <span class="fu">select</span>(date, home, away, winner) <span class="sc">%&gt;%</span> </span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="fu">c</span>(home, away), <span class="at">values_to =</span> <span class="st">"team"</span>, <span class="at">names_to =</span> <span class="st">"location"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">points =</span> <span class="fu">case_when</span>(winner <span class="sc">==</span> team <span class="sc">~</span> <span class="dv">3</span>,</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>                              winner <span class="sc">==</span> <span class="st">"-"</span> <span class="sc">~</span> <span class="dv">1</span>,</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>                              <span class="cn">TRUE</span> <span class="sc">~</span> <span class="dv">0</span>),</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>           <span class="at">victory =</span> <span class="fu">case_when</span>(winner <span class="sc">==</span> team <span class="sc">~</span> <span class="dv">1</span>,</span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>                              <span class="cn">TRUE</span> <span class="sc">~</span> <span class="dv">0</span>),</span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>           <span class="at">draw =</span> <span class="fu">case_when</span>(winner <span class="sc">==</span> <span class="st">"-"</span> <span class="sc">~</span> <span class="dv">1</span>,</span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>                            <span class="cn">TRUE</span> <span class="sc">~</span> <span class="dv">0</span>),</span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>           <span class="at">year =</span> <span class="fu">format</span>(date, <span class="st">"%Y"</span>))</span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>matches_transformed</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 4,558 × 8
-   date       winner      location team         points victory  draw year 
-   &lt;date&gt;     &lt;chr&gt;       &lt;chr&gt;    &lt;chr&gt;         &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;
- 1 2016-05-14 Palmeiras   home     Palmeiras         3       1     0 2016 
- 2 2016-05-14 Palmeiras   away     Athletico-PR      0       0     0 2016 
- 3 2016-05-14 Flamengo    home     Flamengo          3       1     0 2016 
- 4 2016-05-14 Flamengo    away     Sport             0       0     0 2016 
- 5 2016-05-14 Atletico-MG home     Atletico-MG       3       1     0 2016 
- 6 2016-05-14 Atletico-MG away     Santos            0       0     0 2016 
- 7 2016-05-14 Coritiba    home     Coritiba          3       1     0 2016 
- 8 2016-05-14 Coritiba    away     Cruzeiro          0       0     0 2016 
- 9 2016-05-15 Santa Cruz  home     Santa Cruz        3       1     0 2016 
-10 2016-05-15 Santa Cruz  away     Vitoria           0       0     0 2016 
-# … with 4,548 more rows</code></pre>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>matches_transformed <span class="ot">&lt;-</span> matches <span class="sc">%&gt;%</span> <span class="fu">select</span>(date, home, away, winner) <span class="sc">%&gt;%</span> </span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="fu">c</span>(home, away), <span class="at">values_to =</span> <span class="st">"team"</span>, <span class="at">names_to =</span> <span class="st">"location"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">points =</span> <span class="fu">case_when</span>(winner <span class="sc">==</span> team <span class="sc">~</span> <span class="dv">3</span>,</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>                              winner <span class="sc">==</span> <span class="st">"-"</span> <span class="sc">~</span> <span class="dv">1</span>,</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>                              <span class="cn">TRUE</span> <span class="sc">~</span> <span class="dv">0</span>),</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>           <span class="at">victory =</span> <span class="fu">case_when</span>(winner <span class="sc">==</span> team <span class="sc">~</span> <span class="dv">1</span>,</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>                              <span class="cn">TRUE</span> <span class="sc">~</span> <span class="dv">0</span>),</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>           <span class="at">draw =</span> <span class="fu">case_when</span>(winner <span class="sc">==</span> <span class="st">"-"</span> <span class="sc">~</span> <span class="dv">1</span>,</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>                            <span class="cn">TRUE</span> <span class="sc">~</span> <span class="dv">0</span>),</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>           <span class="at">year =</span> <span class="fu">format</span>(date, <span class="st">"%Y"</span>))</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="fu">head</span>(matches_transformed))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="table table-sm table-striped">
+<colgroup>
+<col style="width: 15%">
+<col style="width: 17%">
+<col style="width: 12%">
+<col style="width: 18%">
+<col style="width: 10%">
+<col style="width: 11%">
+<col style="width: 7%">
+<col style="width: 7%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">date</th>
+<th style="text-align: left;">winner</th>
+<th style="text-align: left;">location</th>
+<th style="text-align: left;">team</th>
+<th style="text-align: right;">points</th>
+<th style="text-align: right;">victory</th>
+<th style="text-align: right;">draw</th>
+<th style="text-align: left;">year</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">2016-05-14</td>
+<td style="text-align: left;">Palmeiras</td>
+<td style="text-align: left;">home</td>
+<td style="text-align: left;">Palmeiras</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: left;">2016</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">2016-05-14</td>
+<td style="text-align: left;">Palmeiras</td>
+<td style="text-align: left;">away</td>
+<td style="text-align: left;">Athletico-PR</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: left;">2016</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">2016-05-14</td>
+<td style="text-align: left;">Flamengo</td>
+<td style="text-align: left;">home</td>
+<td style="text-align: left;">Flamengo</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: left;">2016</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">2016-05-14</td>
+<td style="text-align: left;">Flamengo</td>
+<td style="text-align: left;">away</td>
+<td style="text-align: left;">Sport</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: left;">2016</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">2016-05-14</td>
+<td style="text-align: left;">Atletico-MG</td>
+<td style="text-align: left;">home</td>
+<td style="text-align: left;">Atletico-MG</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: left;">2016</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">2016-05-14</td>
+<td style="text-align: left;">Atletico-MG</td>
+<td style="text-align: left;">away</td>
+<td style="text-align: left;">Santos</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: left;">2016</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>We will visualize the point dispersion by team in each of the seasons.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>matches_transformed <span class="sc">%&gt;%</span> </span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(year, team) <span class="sc">%&gt;%</span> </span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarize</span>(<span class="at">sum_points =</span> <span class="fu">sum</span>(points)) <span class="sc">%&gt;%</span> </span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>year, <span class="at">y=</span>sum_points)) <span class="sc">+</span> </span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>        <span class="fu">geom_violin</span>() <span class="sc">+</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>        <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"Dispersion of points of each team per season"</span>, </span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>             <span class="at">subtitle=</span><span class="st">"Points since 2016"</span>,</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>             <span class="at">caption=</span><span class="st">"Season 2020 (Covid year) and 2021 show different patterns."</span>,</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>             <span class="at">x=</span><span class="st">"Season"</span>, <span class="at">y=</span><span class="st">"Points"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="data_analysis_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>Now, we will see the top 5 teams per points. This information will be useful to filter the data when plotting the scores by team, since showing all 20 teams would cause confusion.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>matches_transformed <span class="sc">%&gt;%</span> </span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(team) <span class="sc">%&gt;%</span> </span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarize</span>(<span class="at">sum_points =</span> <span class="fu">sum</span>(points)) <span class="sc">%&gt;%</span> </span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">arrange</span>(<span class="fu">desc</span>(sum_points)) <span class="sc">%&gt;%</span> </span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">top_n</span>(<span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 5 × 2
-  team        sum_points
-  &lt;chr&gt;            &lt;dbl&gt;
-1 Flamengo           431
-2 Palmeiras          421
-3 Atletico-MG        375
-4 Santos             362
-5 Gremio             348</code></pre>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>matches_transformed <span class="sc">%&gt;%</span> </span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(team) <span class="sc">%&gt;%</span> </span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarize</span>(<span class="at">sum_points =</span> <span class="fu">sum</span>(points)) <span class="sc">%&gt;%</span> </span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">arrange</span>(<span class="fu">desc</span>(sum_points)) <span class="sc">%&gt;%</span> </span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">top_n</span>(<span class="dv">5</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="table table-sm table-striped">
+<thead>
+<tr class="header">
+<th style="text-align: left;">team</th>
+<th style="text-align: right;">sum_points</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Flamengo</td>
+<td style="text-align: right;">431</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Palmeiras</td>
+<td style="text-align: right;">421</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Atletico-MG</td>
+<td style="text-align: right;">375</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Santos</td>
+<td style="text-align: right;">362</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Gremio</td>
+<td style="text-align: right;">348</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <p>The previous information might mislead you into thinking that Flamengo is the best team, but this is not true since one team can score a lot of points in one year and not as much in the others. That is where data visualization comes in.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>matches_transformed <span class="sc">%&gt;%</span> </span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(team, year) <span class="sc">%&gt;%</span> </span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarize</span>(<span class="at">sum_points =</span> <span class="fu">sum</span>(points)) <span class="sc">%&gt;%</span> </span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(team <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Palmeiras"</span>, <span class="st">"Flamengo"</span>, <span class="st">"Atletico-MG"</span>, <span class="st">"Santos"</span>, <span class="st">"Gremio"</span>)) <span class="sc">%&gt;%</span> </span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>year, <span class="at">y=</span>sum_points, <span class="at">color=</span>team)) <span class="sc">+</span></span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>        <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>        <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"Points per year in the Brazilian League"</span>, </span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>             <span class="at">subtitle=</span><span class="st">"Points of the top 5 teams since 2016"</span>,</span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>             <span class="at">caption=</span><span class="st">"Palmeiras and Flamengo the same amount of titles."</span>,</span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>             <span class="at">x=</span><span class="st">"Season"</span>, <span class="at">y=</span><span class="st">"Points"</span>, <span class="at">color=</span><span class="st">"Team"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<p><img src="data_analysis_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" width="672"></p>
-</div>
-</div>
-<p>In this period, Palmeiras and Flamengo won the league twice (in 2017 another team won, but it was not on the top 5). Therefore, they are the most successful teams in the league and will be the focus of this analysis. Now we plot the percentage of wins, draws and losses.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>matches_transformed <span class="sc">%&gt;%</span> </span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(team, year) <span class="sc">%&gt;%</span> </span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarize</span>(<span class="at">n_victories=</span><span class="fu">sum</span>(victory), <span class="at">n_draws=</span><span class="fu">sum</span>(draw)) <span class="sc">%&gt;%</span> </span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">n_losses=</span>(<span class="dv">38</span><span class="sc">-</span>n_victories<span class="sc">-</span>n_draws)) <span class="sc">%&gt;%</span> <span class="co"># there are 38 games in total</span></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(team <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Palmeiras"</span>, <span class="st">"Flamengo"</span>)) <span class="sc">%&gt;%</span> </span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">pivot_longer</span>(<span class="fu">c</span>(n_victories, n_draws, n_losses), <span class="at">values_to=</span><span class="st">"n_results"</span>, <span class="at">names_to=</span><span class="st">"results"</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>team, <span class="at">y=</span>n_results, <span class="at">fill=</span>results)) <span class="sc">+</span></span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>        <span class="fu">geom_bar</span>(<span class="at">position=</span><span class="st">"stack"</span>, <span class="at">stat =</span> <span class="st">"identity"</span>) <span class="sc">+</span></span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>        <span class="fu">facet_wrap</span>(. <span class="sc">~</span> year) <span class="sc">+</span> </span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>        <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"Results per year in the Brazilian League"</span>, </span>
-<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>             <span class="at">subtitle=</span><span class="st">"Results for Flamengo and Palmeiras since 2016"</span>,</span>
-<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>             <span class="at">caption=</span><span class="st">"The teams overcame each other in the same amount of seasons."</span>,</span>
-<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>             <span class="at">x=</span><span class="st">"Team"</span>, <span class="at">y=</span><span class="st">"Number of Matches"</span>, <span class="at">fill=</span><span class="st">"Result"</span>) <span class="sc">+</span></span>
-<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>        <span class="fu">scale_fill_discrete</span>(<span class="at">labels=</span><span class="fu">c</span>(<span class="st">'Draw'</span>, <span class="st">'Loss'</span>, <span class="st">'Win'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>matches_transformed <span class="sc">%&gt;%</span> </span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(team, year) <span class="sc">%&gt;%</span> </span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarize</span>(<span class="at">sum_points =</span> <span class="fu">sum</span>(points)) <span class="sc">%&gt;%</span> </span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(team <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Palmeiras"</span>, <span class="st">"Flamengo"</span>, <span class="st">"Atletico-MG"</span>, <span class="st">"Santos"</span>, <span class="st">"Gremio"</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>year, <span class="at">y=</span>sum_points, <span class="at">color=</span>team)) <span class="sc">+</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>        <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>        <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"Points per year in the Brazilian League"</span>, </span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>             <span class="at">subtitle=</span><span class="st">"Points of the top 5 teams since 2016"</span>,</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>             <span class="at">caption=</span><span class="st">"Palmeiras and Flamengo the same amount of titles."</span>,</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>             <span class="at">x=</span><span class="st">"Season"</span>, <span class="at">y=</span><span class="st">"Points"</span>, <span class="at">color=</span><span class="st">"Team"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="data_analysis_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
+<p>In this period, Palmeiras and Flamengo won the league twice. Therefore, they are the most successful teams in the league and will be the focus of this analysis. Now we plot the percentage of wins, draws and losses.</p>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Note
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>In 2017 another team won the league, but it was not good enough to be on the top 5.</p>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>matches_transformed <span class="sc">%&gt;%</span> </span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(team, year) <span class="sc">%&gt;%</span> </span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarize</span>(<span class="at">n_victories=</span><span class="fu">sum</span>(victory), <span class="at">n_draws=</span><span class="fu">sum</span>(draw)) <span class="sc">%&gt;%</span> </span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">n_losses=</span>(<span class="dv">38</span><span class="sc">-</span>n_victories<span class="sc">-</span>n_draws)) <span class="sc">%&gt;%</span> <span class="co"># there are 38 games in total</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(team <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Palmeiras"</span>, <span class="st">"Flamengo"</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">pivot_longer</span>(<span class="fu">c</span>(n_victories, n_draws, n_losses), <span class="at">values_to=</span><span class="st">"n_results"</span>, <span class="at">names_to=</span><span class="st">"results"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>team, <span class="at">y=</span>n_results, <span class="at">fill=</span>results)) <span class="sc">+</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>        <span class="fu">geom_bar</span>(<span class="at">position=</span><span class="st">"stack"</span>, <span class="at">stat =</span> <span class="st">"identity"</span>) <span class="sc">+</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>        <span class="fu">facet_wrap</span>(. <span class="sc">~</span> year) <span class="sc">+</span> </span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>        <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"Results per year in the Brazilian League"</span>, </span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>             <span class="at">subtitle=</span><span class="st">"Results for Flamengo and Palmeiras since 2016"</span>,</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>             <span class="at">caption=</span><span class="st">"The teams overcame each other in the same amount of seasons."</span>,</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>             <span class="at">x=</span><span class="st">"Team"</span>, <span class="at">y=</span><span class="st">"Number of Matches"</span>, <span class="at">fill=</span><span class="st">"Result"</span>) <span class="sc">+</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>        <span class="fu">scale_fill_discrete</span>(<span class="at">labels=</span><span class="fu">c</span>(<span class="st">'Draw'</span>, <span class="st">'Loss'</span>, <span class="st">'Win'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="data_analysis_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Both teams seem to be equal, with Palmeiras better in the first three years and Flamengo in the last ones.</p>
+<p>Palmeiras was the champion of the Brazilian League this year <span class="citation" data-cites="ge2022">(<a href="#ref-ge2022" role="doc-biblioref">GE 2022</a>)</span>. It was also ahead of Flamengo by 19 points <span class="citation" data-cites="wikipedia2022">(<a href="#ref-wikipedia2022" role="doc-biblioref"><span>“2022 Campeonato Brasileiro Série a”</span> 2022</a>)</span>. Therefore, considering all seasons since 2016, Palmeiras is the team with the highest cummulative number of points.</p>
+<div class="cell page-columns page-full">
+
+<div class="no-row-height column-margin column-container"><div class="cell-output-display">
+<table class="table table-sm table-striped">
+<caption>Top 5 teams in the 2022 Brazilian League</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Team</th>
+<th style="text-align: right;">Points</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Palmeiras</td>
+<td style="text-align: right;">81</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Internacional</td>
+<td style="text-align: right;">73</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Fluminense</td>
+<td style="text-align: right;">70</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Corinthians</td>
+<td style="text-align: right;">65</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Flamengo</td>
+<td style="text-align: right;">62</td>
+</tr>
+</tbody>
+</table>
+</div></div></div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://live.staticflickr.com/65535/52490026326_243a9cb629_h.jpg" class="img-fluid figure-img" width="600"></p>
+<p></p><figcaption class="figure-caption">Palmeiras celebrating the Brazilian League of 2022 title!</figcaption><p></p>
+</figure>
+</div>
+<p>The analysis showed that Palmeiras and Flamengo have been the best Brazilian teams since 2016. They have had similar aspects in different statistics, such as the number of victories and points. However, Palmeiras overcame Flamengo in the past championship by winning it and having 19 points of advantage.</p>
+<div class="callout-important callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Important
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>In 2022, Palmeiras won the Brazilian League and Flamengo won the Brazilian Cup. Next year, they will play the Brazilian Super Cup, a two-game tournament to decide who deserves the trophy for the 2022 year.</p>
+</div>
+</div>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>List of functions used:</p>
+<ol type="1">
+<li>dplyr</li>
+</ol>
+<ul>
+<li><p>read_csv</p></li>
+<li><p>select</p></li>
+<li><p>rename</p></li>
+<li><p>filter</p></li>
+<li><p>pivot_longer</p></li>
+<li><p>mutate</p></li>
+<li><p>group_by</p></li>
+<li><p>summarize</p></li>
+<li><p>arrange</p></li>
+</ul>
+<ol start="2" type="1">
+<li>ggplot2</li>
+</ol>
+<ul>
+<li><p>geom_violin</p></li>
+<li><p>geom_point</p></li>
+<li><p>geom_bar</p></li>
+</ul>
+</div>
+</div>
 
 
 
-</main> <!-- /main -->
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" role="doc-bibliography">
+<div id="ref-wikipedia2022" class="csl-entry" role="doc-biblioentry">
+<span>“2022 Campeonato Brasileiro Série a.”</span> 2022. <em>Wikipedia</em>. Wikimedia Foundation. <a href="https://en.wikipedia.org/wiki/2022_Campeonato_Brasileiro_S%C3%A9rie_A">https://en.wikipedia.org/wiki/2022_Campeonato_Brasileiro_S%C3%A9rie_A</a>.
+</div>
+<div id="ref-duque2018" class="csl-entry" role="doc-biblioentry">
+Duque, Adao. 2018. <span>“Brasileirao Dataset.”</span> <em>GitHub</em>. <a href="https://github.com/adaoduque/Brasileirao_Dataset">https://github.com/adaoduque/Brasileirao_Dataset</a>.
+</div>
+<div id="ref-ge2022" class="csl-entry" role="doc-biblioentry">
+GE. 2022. <span>“É Campeão! Palmeiras Conquista o Título Do Brasileirão Após Derrota Do Inter Para o América-MG.”</span> <em>Ge</em>. <a href="https://ge.globo.com/futebol/times/palmeiras/noticia/2022/11/02/e-campeao-palmeiras-conquista-o-titulo-do-brasileirao-apos-derrota-do-inter-para-o-america-mg.ghtml">https://ge.globo.com/futebol/times/palmeiras/noticia/2022/11/02/e-campeao-palmeiras-conquista-o-titulo-do-brasileirao-apos-derrota-do-inter-para-o-america-mg.ghtml</a>.
+</div>
+</div></section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {

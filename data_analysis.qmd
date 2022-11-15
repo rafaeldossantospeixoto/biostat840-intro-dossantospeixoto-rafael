@@ -1,12 +1,13 @@
 ---
 title: "Data Analysis"
+bibliography: references.bib
 ---
 
 One of the things I am passionate about is soccer, both playing and watching. My favorite team is Palmeiras (and it should be your favorite team too)! In the past three years, we won two South American Cups (2020 and 2021), one Brazilian Cup (2020), and one Brazilian League (2022). If this information is not enough to make you believe this is the best team in the world, I will use the information of the past Brazilian League to show how Palmeiras stands out against the other teams.
 
-This analysis was made to anyone who knows what soccer is! The data used was collected by Adão Duque and it is available on his [github repo](https://github.com/adaoduque/Brasileirao_Dataset) and also on [kaggle](https://www.kaggle.com/datasets/adaoduque/campeonato-brasileiro-de-futebol?resource=download). It shows the information of the 7645 Brazilian League matches between the years of 2003 and 2021. In addition, it also presents some statistics for these games. A file called *Legenda.txt* includes the dictionary for the data.
+This analysis was made to anyone who knows what soccer is! The data used was collected by Adão Duque and it is available on his [github repo](https://github.com/adaoduque/Brasileirao_Dataset) and also on [kaggle](https://www.kaggle.com/datasets/adaoduque/campeonato-brasileiro-de-futebol?resource=download). It shows the information of the 7645 Brazilian League matches between the years of 2003 and 2021. In addition, it also presents some statistics for these games. A file called [*Legenda.txt*](https://raw.githubusercontent.com/rafaeldossantospeixoto/biostat840-intro-dossantospeixoto-rafael/master/data/br/Legenda.txt) includes the dictionary for the data [@duque2018].
 
-First, we load the data for the matches, select and rename (to English) the columns used in this data and select the last 5 years.
+First, we load the data for the matches, select and rename (to English) the columns used in this data and select the last 6 years.
 
 ```{r}
 library(tidyverse)
@@ -23,7 +24,7 @@ matches <- read_csv("data/br/campeonato-brasileiro-full.csv", show_col_types = F
            away_score = visitante_placar) %>% 
     filter(date > "2016-01-01")
     
-matches
+knitr::kable(head(matches))
 ```
 
 Now, we will create a column for the team and the condition it player. Then we will create columns for the number of points awarded in each game. If a team wins it gets 3 points, if it draws it gets 1 point, if it looses 0 points. We will also create a column for the season (year).
@@ -40,7 +41,21 @@ matches_transformed <- matches %>% select(date, home, away, winner) %>%
                             TRUE ~ 0),
            year = format(date, "%Y"))
 
-matches_transformed
+knitr::kable(head(matches_transformed))
+```
+
+We will visualize the point dispersion by team in each of the seasons.
+
+```{r}
+matches_transformed %>% 
+    group_by(year, team) %>% 
+    summarize(sum_points = sum(points)) %>% 
+    ggplot(aes(x=year, y=sum_points)) + 
+        geom_violin() +
+        labs(title="Dispersion of points of each team per season", 
+             subtitle="Points since 2016",
+             caption="Season 2020 (Covid year) and 2021 show different patterns.",
+             x="Season", y="Points")
 ```
 
 Now, we will see the top 5 teams per points. This information will be useful to filter the data when plotting the scores by team, since showing all 20 teams would cause confusion.
@@ -50,7 +65,8 @@ matches_transformed %>%
     group_by(team) %>% 
     summarize(sum_points = sum(points)) %>% 
     arrange(desc(sum_points)) %>% 
-    top_n(5)
+    top_n(5) %>% 
+    knitr::kable()
 ```
 
 The previous information might mislead you into thinking that Flamengo is the best team, but this is not true since one team can score a lot of points in one year and not as much in the others. That is where data visualization comes in.
@@ -69,7 +85,13 @@ matches_transformed %>%
              x="Season", y="Points", color="Team")
 ```
 
-In this period, Palmeiras and Flamengo won the league twice (in 2017 another team won, but it was not on the top 5). Therefore, they are the most successful teams in the league and will be the focus of this analysis. Now we plot the percentage of wins, draws and losses.
+In this period, Palmeiras and Flamengo won the league twice. Therefore, they are the most successful teams in the league and will be the focus of this analysis. Now we plot the percentage of wins, draws and losses.
+
+::: {.callout-note collapse="true"}
+
+In 2017 another team won the league, but it was not good enough to be on the top 5.
+
+:::
 
 ```{r}
 matches_transformed %>% 
@@ -88,3 +110,61 @@ matches_transformed %>%
         scale_fill_discrete(labels=c('Draw', 'Loss', 'Win'))
     
 ```
+
+Both teams seem to be equal, with Palmeiras better in the first three years and Flamengo in the last ones.
+
+Palmeiras was the champion of the Brazilian League this year [@ge2022]. It was also ahead of Flamengo by 19 points [@wikipedia2022]. Therefore, considering all seasons since 2016, Palmeiras is the team with the highest cummulative number of points.
+
+```{r}
+#| column: margin
+#| echo: false
+
+knitr::kable(
+  data.frame(Team = c("Palmeiras", "Internacional", "Fluminense", "Corinthians", "Flamengo"), Points = c(81,73,70,65,62)),
+  caption = "Top 5 teams in the 2022 Brazilian League"
+)
+```
+
+![Palmeiras celebrating the Brazilian League of 2022 title!](https://live.staticflickr.com/65535/52490026326_243a9cb629_h.jpg){width="600"}
+
+The analysis showed that Palmeiras and Flamengo have been the best Brazilian teams since 2016. They have had similar aspects in different statistics, such as the number of victories and points. However, Palmeiras overcame Flamengo in the past championship by winning it and having 19 points of advantage.
+
+::: {.callout-important}
+
+In 2022, Palmeiras won the Brazilian League and Flamengo won the Brazilian Cup. Next year, they will play the Brazilian Super Cup, a two-game tournament to decide who deserves the trophy for the 2022 year.
+
+:::
+
+::: {.callout-note}
+
+List of functions used:
+
+1.  dplyr
+
+-   read_csv
+
+-   select
+
+-   rename
+
+-   filter
+
+-   pivot_longer
+
+-   mutate
+
+-   group_by
+
+-   summarize
+
+-   arrange
+
+2.  ggplot2
+
+-   geom_violin
+
+-   geom_point
+
+-   geom_bar
+
+:::
